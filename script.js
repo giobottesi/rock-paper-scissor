@@ -27,13 +27,13 @@ function game () {
     let playerSelection = prompt("Choose between rock, paper or scissor!!")
     let computerSelection = getComputerChoice(gameOptions);
 
-    result = playRound(playerSelection, computerSelection)
+    result = playRound(playerSelection.toLowerCase(), computerSelection)
 
     if (result === "player") {
-      message = "You won! " + playerSelection + " beats " + computerSelection
+      message = "You won! " + playerSelection.toLowerCase() + " beats " + computerSelection
       playerScore++
     } else if (result === "computer") {
-      message = "You lose! " + computerSelection + " beats " + playerSelection
+      message = "You lose! " + computerSelection.toLowerCase() + " beats " + playerSelection.toLowerCase()
       computerScore++
     } else {
       message = "It's a tie!"
@@ -45,6 +45,7 @@ function game () {
   }
 
   playerScore > computerScore ? console.log("Congrats! You won!") : console.log("Oh no! You lose.")
+  return console.log("Final Score - Player: " + playerScore + "; Computer: " + computerScore)
 }
 
 console.log(game())
