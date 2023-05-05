@@ -23,8 +23,14 @@ function playRound(playerSelection, computerSelection) {
 function game () {
   playerScore = 0
   computerScore = 0
+
   for (let i = 1; i <= 5; i++ ) {
     let playerSelection = prompt("Choose between rock, paper or scissor!!")
+
+    while (!gameOptions.includes(playerSelection.toLowerCase())){
+      playerSelection = prompt("It must be one of the options: 'rock', 'paper' or 'scissor'.")
+    }
+
     let computerSelection = getComputerChoice(gameOptions);
 
     result = playRound(playerSelection.toLowerCase(), computerSelection)
@@ -33,7 +39,7 @@ function game () {
       message = "You won! " + playerSelection.toLowerCase() + " beats " + computerSelection
       playerScore++
     } else if (result === "computer") {
-      message = "You lose! " + computerSelection.toLowerCase() + " beats " + playerSelection.toLowerCase()
+      message = "You lose! " + computerSelection + " beats " + playerSelection.toLowerCase()
       computerScore++
     } else {
       message = "It's a tie!"
