@@ -1,57 +1,96 @@
 const gameOptions = ['rock', 'paper', 'scissor']
 
+let rockButton = document.querySelector(".rock")
+let paperButton = document.querySelector(".paper")
+let scissorButton = document.querySelector(".scissor")
+let resultsPanel = document.querySelector("#results-panel")
+
+let roundResult = document.createElement('round-result')
+let roundMessage = document.createElement('round-message')
+let playerScore = document.createElement('player-score')
+let computerScore = document.createElement('computer-score')
+
+let finalResult = document.createElement('final-result')
+let finalMessage = document.createElement('final-message')
+
+var playerScoreCounter = 0
+var computerScoreCounter = 0
+
+roundResult.classList.add('container')
+playerScore.classList.add('col-sm')
+computerScore.classList.add('col-sm')
+
 function getComputerChoice (options) {
   return options[Math.floor(Math.random() * options.length)]
 }
 
-const playerSelection = "rock";
-
 function playRound(playerSelection, computerSelection) {
-  lowercasedPlayerSelection = playerSelection.toLowerCase()
-
-  if(playerSelection.toLowerCase() === computerSelection) {
+  if(playerSelection === computerSelection) {
     return "tie";
-  } else if(playerSelection.toLowerCase() === "rock") {
+  } else if(playerSelection === "rock") {
     return computerSelection === "paper" ? "computer" : "player";
-  } else if(playerSelection.toLowerCase() === "paper") {
+  } else if(playerSelection === "paper") {
     return computerSelection === "scissor" ? "computer" : "player";
-  } else if(playerSelection.toLowerCase() === "scissor") {
+  } else if(playerSelection === "scissor") {
     return computerSelection === "rock" ? "computer" : "player";
   }
 }
 
-function game () {
-  playerScore = 0
-  computerScore = 0
-
-  for (let i = 1; i <= 5; i++ ) {
-    let playerSelection = prompt("Choose between rock, paper or scissor!!")
-
-    while (!gameOptions.includes(playerSelection.toLowerCase())){
-      playerSelection = prompt("It must be one of the options: 'rock', 'paper' or 'scissor'.")
-    }
-
-    let computerSelection = getComputerChoice(gameOptions);
-
-    result = playRound(playerSelection.toLowerCase(), computerSelection)
-
-    if (result === "player") {
-      message = "You won! " + playerSelection.toLowerCase() + " beats " + computerSelection
-      playerScore++
-    } else if (result === "computer") {
-      message = "You lose! " + computerSelection + " beats " + playerSelection.toLowerCase()
-      computerScore++
-    } else {
-      message = "It's a tie!"
-    }
-
-    console.log(message)
-    console.log("Player score: " + playerScore)
-    console.log("Computer score: " + computerScore)
+function scoreCounter (result, playerSelection, computerSelection) {
+  if (result === "player") {
+    roundResult.textContent = "You won! " + playerSelection + " beats " + computerSelection
+    playerScoreCounter = playerScoreCounter + 1
+  } else if (result === "computer") {
+    roundResult.textContent = "You lose! " + computerSelection + " beats " + playerSelection
+    computerScoreCounter = computerScoreCounter + 1
+  } else {
+    roundResult.textContent = "It's a tie!"
   }
-
-  playerScore > computerScore ? console.log("Congrats! You won!") : console.log("Oh no! You lose.")
-  return console.log("Final Score - Player: " + playerScore + "; Computer: " + computerScore)
 }
 
-console.log(game())
+function resetScores () {
+  playerScoreCounter = 0
+  computerScoreCounter = 0
+}
+
+function removeFinalResult () {
+  finalResult.textContent = ""
+}
+
+function gameOver () {
+  if (playerScoreCounter > computerScoreCounter) {
+    finalResult.textContent = "You won!!!"
+  } else {
+    finalResult.textContent = "You lose ):"
+  }
+
+  finalResult.appendChild(finalMessage);
+  resultsPanel.appendChild(finalResult)
+
+  resetScores()
+}
+
+function game (playerSelection) {
+  if (playerScoreCounter === 0 && computerScoreCounter === 0) removeFinalResult()
+
+  let computerSelection = getComputerChoice(gameOptions);
+
+  result = playRound(playerSelection, computerSelection)
+
+  scoreCounter(result, playerSelection, computerSelection)
+
+  playerScore.textContent = "Player Score: " + playerScoreCounter
+  computerScore.textContent = "Computer Score: " + computerScoreCounter
+
+  roundResult.appendChild(roundMessage);
+  roundResult.appendChild(playerScore);
+  roundResult.appendChild(computerScore);
+  resultsPanel.appendChild(roundResult)
+
+  if (playerScoreCounter === 5 || computerScoreCounter === 5) gameOver()
+}
+
+
+rockButton.addEventListener('click', () => game('rock'))
+paperButton.addEventListener('click', () => game('paper'))
+scissorButton.addEventListener('click', () => game('scissor'))
